@@ -2,7 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { RandomTextService } from './random-text.service';
+import { CustomValidatorService } from './services/custom-validator.service';
+import { RandomTextService } from './services/random-text.service';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,8 @@ export class AppComponent implements OnInit, OnDestroy {
   error;
   constructor(
     private _formBuilder: FormBuilder,
-    private randomTextService: RandomTextService
+    private randomTextService: RandomTextService,
+    private customValidatorService: CustomValidatorService
   ) {}
 
   ngOnInit(): void {
@@ -33,7 +35,10 @@ export class AppComponent implements OnInit, OnDestroy {
       ],
       url: [
         'https://baconipsum.com/api/?type=all-meat&paras=1',
-        Validators.required,
+        Validators.compose([
+          Validators.required,
+          this.customValidatorService.validateUrl,
+        ]),
       ],
     });
     this.textForm.get('text').valueChanges.subscribe((value) => {
@@ -66,7 +71,7 @@ export class AppComponent implements OnInit, OnDestroy {
       .subscribe(
         (data) => {
           this.topTen = data;
-          this.isLoading = false
+          this.isLoading = false;
         },
         (err) => {
           this.isLoading = false;

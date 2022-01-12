@@ -1,6 +1,7 @@
 <div class="container mt-6">
   <div class="row card">
     <form class="col-12" [formGroup]="textForm" (ngSubmit)="onSubmit()">
+      <h3 class="text-primary">interview with Jesper</h3>
       <div class="alert alert-danger" *ngIf="error">
         <p>{{ error }}</p>
       </div>
@@ -32,6 +33,15 @@
           name="url"
           formControlName="url"
         />
+        <small class="text-muted"
+          >Please use the same Url in order to get the desired result "https://baconipsum.com/api/?type=all-meat&paras=1"
+        </small>
+        <div
+          *ngIf="textForm.get('url').hasError('urlWrong')"
+          class="alert alert-danger"
+        >
+          <span> please use the same Url</span>
+        </div>
       </div>
       <div *ngFor="let item of topTen | keyvalue">
         Word: <b>{{ item.key }}</b> occurrences: <b>{{ item.value }}</b>
